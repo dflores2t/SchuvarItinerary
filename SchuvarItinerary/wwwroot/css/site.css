@@ -16,3 +16,40 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+label {
+  color: #008cba;
+  font-weight: bold;
+}
+
+.custom-tooltip {
+  --bs-tooltip-bg: var(--bs-success);
+}
+
+input[type=text],
+textarea {
+  text-transform: uppercase;
+}
+
+thead th,
+tfoot td {
+  color: #008cba;
+  font-weight: bold;
+}
+
+tbody tr {
+  --bs-table-striped-color: none;
+  color: #e99002;
+  font-weight: bold;
+}
+
+.list-airline-table tbody {
+  white-space: nowrap;
+}
+
+.list-airline-row i,
+.list-airline-row button {
+  border-radius: 0;
+  border-width: 0px;
+  background-color: transparent;
+}

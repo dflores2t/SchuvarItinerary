@@ -14,9 +14,9 @@ public class HomeController : Controller
     this.context = context;
   }
 
-  public async Task<IActionResult> Index()
+  public IActionResult Index()
   {
-    return View(await context.Aerolineas.ToListAsync());
+    return View();
   }
 
   public IActionResult Privacy()

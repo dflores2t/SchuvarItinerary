@@ -11,5 +11,7 @@ public partial class Aerolinea
 
     public string AeroDescription { get; set; } = null!;
 
+    public bool? IsDeleted { get; set; }
+
     public virtual ICollection<FlyCustomer> FlyCustomers { get; } = new List<FlyCustomer>();
 }
