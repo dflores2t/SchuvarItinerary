@@ -1,5 +1,10 @@
 USE master
 go
+if exists(select name
+from master.sys.databases
+WHERE name ='SchuvarItinerary')
+Drop DATABASE SchuvarItinerary
+go
 Create DATABASE SchuvarItinerary
 go
 use SchuvarItinerary
@@ -16,8 +21,9 @@ create TABLE Aerolinea
 (
   IdAerolinea INT IDENTITY(1,1),
   AerolineaName VARCHAR(2) not null,
-  AeroDescription VARCHAR(50) not null
-    constraint pk_Id_aerolinea PRIMARY KEY(IdAerolinea)
+  AeroDescription VARCHAR(50) not null,
+  isDeleted BIT,
+  constraint pk_Id_aerolinea PRIMARY KEY(IdAerolinea)
 )
 GO
 create table FlyCustomer
