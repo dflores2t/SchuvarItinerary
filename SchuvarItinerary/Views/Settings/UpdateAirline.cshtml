@@ -1,0 +1,48 @@
+@using SchuvarItinerary.Models.ViewModels;
+@model ViewAirLine
+@{
+  ViewData["Title"] = "Update Record";
+}
+<div class="container">
+  <div class="row">
+    <form asp-action="UpdateAirline">
+      <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+      <input type="hidden" asp-for="IdAerolinea">
+      <fieldset class="col col-md-5 mx-auto">
+        <legend class="text-center text-white bg-success">Update Airline Services</legend>
+        <div class="mb-3">
+          <label for="AerolineaName" class="form-label">Abreviation AirLine</label>
+          <input type="text" class="form-control" asp-for="AerolineaName" placeholder="AV" data-bs-toggle="tooltip"
+            data-bs-placement="left" data-bs-custom-class="custom-tooltip"
+            data-bs-title="Write a short name for Airline Company." maxlength="2">
+          <span asp-validation-for="AerolineaName" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+          <label for="AeroDescription" class="form-label">Airline Fullname / Description</label>
+          <textarea class="form-control" placeholder="AVIANCA" asp-for="AeroDescription" rows="3"
+            data-bs-toggle="tooltip" data-bs-placement="left" data-bs-custom-class="custom-tooltip"
+            data-bs-title="General description about Airline Company" maxlength="50"></textarea>
+          <span asp-validation-for="AeroDescription" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+          <button type="submit" class="btn btn-primary link-ligth" data-bs-toggle="tooltip"
+            data-bs-title="Save Information" data-bs-placement="left" data-bs-custom-class="custom-tooltip"><i
+              class="fas fa-save">&nbsp;Save&nbsp;&nbsp;&nbsp;</i></button>
+          <a asp-action="Index" data-bs-toggle="tooltip" data-bs-title="Return to Previous page"
+            data-bs-custom-class="custom-tooltip" data-bs-placement="right" class="btn btn-warning"><i
+              class="fas fa-undo-alt">&nbsp;Return</i></a>
+        </div>
+        <div
+          class="alert @(ViewBag.Success == null  && ViewBag.ErrorMessage == null ? "" : ViewBag.Success !=null ? "alert-success" : "alert-warning") text-white text-center">
+          @(ViewBag.Success != null ? ViewBag.Success : ViewBag.ErrorMessage)
+        </div>
+      </fieldset>
+    </form>
+  </div>
+</div>
+
+@section Scripts{
+@{
+await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}
+}

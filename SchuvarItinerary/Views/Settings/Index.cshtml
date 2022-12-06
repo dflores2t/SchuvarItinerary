@@ -1,0 +1,57 @@
+@using SchuvarItinerary.Models.ViewModels;
+@model IEnumerable<ViewAirLine>
+@{
+  ViewData["Title"] = "All AirLine";
+}
+<div>
+  <a asp-action="AirLine" class="btn btn-primary"><i class="fas fa-plus">&nbsp;Add New</i></a>
+  <a asp-action="Index" asp-controller="Home" class="btn btn-warning"><i class="fas fa-undo-alt">&nbsp;Go Back</i></a>
+</div>
+
+@if (Model.Count() > 0)
+{
+  <table class="table table-responsive table-striped table-bordered table-hover mt-2 list-airline-table">
+  <thead>
+    <tr class="text-center">
+      <th>@Html.DisplayNameFor(h=> h.IdAerolinea)</th>
+      <th>@Html.DisplayNameFor(h=> h.AerolineaName)</th>
+      <th>@Html.DisplayNameFor(h=> h.AeroDescription)</th>
+      <th colspan="2">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    @foreach (var data in Model)
+      {
+        <tr class="list-airline-row">
+          <td>@data.IdAerolinea</td>
+          <td>@data.AerolineaName</td>
+          <td>@data.AeroDescription</td>
+          <td class="text-center" style="width:7%">
+            <a asp-action="UpdateAirline" asp-controller="Settings" asp-route-id="@data.IdAerolinea"
+          data-bs-toggle="tooltip" data-bs-title="Update Record" data-bs-custom-class="custom-tooltip"
+          data-bs-placement="top">
+              <i class="fas fa-edit btn btn-lg text-primary"></i>
+            </a>
+          </td>
+          <td class="text-center" style="width:7%">
+            <form asp-action="DeleteAirline" asp-controller="Settings" asp-route-id="@data.IdAerolinea" method="post">
+              <button type="submit" data-bs-toggle="tooltip" data-bs-title="Delete Record"
+            data-bs-custom-class="custom-tooltip" data-bs-placement="right"><i
+              class="fas fa-trash btn btn-lg text-warning"></i></button>
+            </form>
+          </td>
+        </tr>
+      }
+    </tbody>
+    <tfoot>
+      <tr>
+        <td colspan=4>Total Registro</td>
+        <td>@Model.Count()</td>
+      </tr>
+    </tfoot>
+  </table>
+}
+<div class="alert @(Model.Count() < 1 ? "alert-info" : "") text-white text-center mt-5 col-md-5 mx-auto">
+  <h4> No Data Found </h4>
+</div>
+<div
