@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using SchuvarItinerary.Models;
 
 namespace SchuvarItinerary.Controllers;
@@ -14,7 +15,9 @@ public class CustomerController : Controller
   }
 
   #region GetEndPoint
-    public IActionResult Customer(){
+  public IActionResult AddCustomerFlight()
+  {
+    ViewData["Aerolinea"] = new SelectList(dbContext.Aerolineas, "IdAerolinea", "AeroDescription");
     return View();
   }
   #endregion

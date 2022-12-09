@@ -17,7 +17,8 @@ body {
   margin-bottom: 60px;
 }
 
-label {
+label,
+option {
   color: #008cba;
   font-weight: bold;
 }

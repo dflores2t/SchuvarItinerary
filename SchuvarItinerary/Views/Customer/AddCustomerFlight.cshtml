@@ -1,0 +1,79 @@
+@model SchuvarItinerary.Models.ViewModels.ViewCustomerFlightModel
+@{
+  ViewData["Title"] = "Customer Itineray";
+}
+<h3 class="bg-success text-white text-center col-md-10 offset-md-1">Add New Customer Itineray</h3>
+<form class="row gy-2 gx-3 align-items-center" method="post">
+  <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+  <div class="col-md-3 offset-md-1">
+    <div class="input-group form-floating">
+      <div class="input-group-text"><i class="fas fa-mobile-alt"></i></div>
+      <input type="tel" pattern="[0-9]{8}" class="form-control" asp-for="Contact" placeholder="Username">
+      <label class="ms-4">Phone Number</label>
+    </div>
+    <span asp-validation-for="Contact" class="text-danger"></span>
+  </div>
+  <div class="col-md-4">
+    <div class="input-group form-floating">
+      <div class="input-group-text"><i class="far fa-user"></i></div>
+      <input type="text" class="form-control" asp-for="FullName" placeholder="Jhon Doe">
+      <label class="ms-4" asp-for="FullName">Customer Name</label>
+    </div>
+    <span asp-validation-for="FullName" class="text-danger"></span>
+  </div>
+  <div class="col-md-3">
+    <div class="input-group form-floating">
+      <div class="input-group-text"><i class="fas fa-map-pin"></i></div>
+      <input type="text" class="form-control" asp-for="Flight!.Localizer" placeholder="XUZBR">
+      <label class="ms-4">Localizador</label>
+    </div>
+    <span asp-validation-for="Flight!.Localizer" class="text-danger"></span>
+  </div>
+  <div class="col-md-10 offset-md-1">
+    <div class="input-group form-floating">
+      <div class="input-group-text"><i class="fas fa-bars"></i></div>
+      <select class="form-select" asp-for="Flight!.IdAerolinea" aria-label="Default select example"
+        asp-items="ViewBag.Aerolinea">
+        <option value="0">Please Select Aeroline</option>
+      </select>
+      <label class="ms-4">Aeroline List</label>
+    </div>
+    <span asp-validation-for="Flight!.IdAerolinea" class="text-danger"></span>
+  </div>
+  <div class="col-md-4 offset-md-1">
+    <div class="input-group form-floating">
+      <div class="input-group-text"><i class="fas fa-map-marker"></i></div>
+      <input type="text" class="form-control" asp-for="Flight!.Route" placeholder="MGA/MIA">
+      <label class="ms-4">Route</label>
+    </div>
+    <span asp-validation-for="Flight!.Route" class="text-danger"></span>
+  </div>
+  <div class="col-md-3">
+    <div class="input-group form-floating">
+      <div class="input-group-text"><i class="far fa-calendar-check"></i></div>
+      <input type="date" class="form-control" asp-for="Flight!.Departures" placeholder="">
+      <label class="ms-4">Departurs</label>
+    </div>
+    <span asp-validation-for="Flight!.Departures" class="text-danger"></span>
+  </div>
+  <div class="col-md-3">
+    <div class="input-group form-floating">
+      <div class="input-group-text"><i class="far fa-calendar-check"></i></div>
+      <input type="date" class="form-control" asp-for="Flight!.Arrivals" placeholder="">
+      <label class="ms-4">Arrivals</label>
+    </div>
+    <span asp-validation-for="Flight!.Arrivals" class="text-danger"></span>
+  </div>
+  <div class="col-md-4 offset-md-1 mt-3">
+    <button type="submit" class="btn btn-primary"><i class="far fa-save" data-bs-toggle="tooltip"
+        data-bs-title="Save Information" data-bs-placement="left"
+        data-bs-custom-class="custom-tooltip">&nbsp;Submit&nbsp;</i></button>
+    <button type="reset" class="btn btn-info" data-bs-toggle="tooltip" data-bs-title="Clear all information on textbox"
+      data-bs-custom-class="custom-tooltip" data-bs-placement="bottom"><i
+        class="fas fa-broom">&nbsp;Reset&nbsp;&nbsp;</i></button>
+    <a asp-action="Index" asp-controller="Home" class="btn btn-success" data-bs-toggle="tooltip"
+      data-bs-title="Retur to Home Page" data-bs-custom-class="custom-tooltip" data-bs-placement="right"><i
+        class="fas fa-undo">&nbsp;Go
+        Back&nbsp;</i></a>
+  </div>
+</form>
