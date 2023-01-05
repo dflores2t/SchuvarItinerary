@@ -9,7 +9,7 @@ public partial class Customer
 
     public string FullName { get; set; } = null!;
 
-    public short Contact { get; set; }
+    public int Contact { get; set; }
 
     public virtual ICollection<FlyCustomer> FlyCustomers { get; } = new List<FlyCustomer>();
 }

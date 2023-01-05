@@ -13,7 +13,7 @@ create TABLE Customer
 (
   IdCustomer INT IDENTITY(1,1),
   FullName VARCHAR(100) not null,
-  Contact SMALLINT not null
+  Contact INT not null
     CONSTRAINT pk_id_customer PRIMARY KEY(IdCustomer),
 )
 go

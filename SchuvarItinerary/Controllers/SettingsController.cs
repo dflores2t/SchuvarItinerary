@@ -24,10 +24,10 @@ public class SettingsController : Controller
     result = await dbContext.Aerolineas.Where(d => d.IsDeleted == false).Select(d => new ViewAirLine(d)).ToListAsync();
     return View(result);
   }
-
-  public ActionResult AirLine() => View();
   [HttpGet]
-  public async Task<ActionResult> UpdateAirline(int? id)
+  public ViewResult AirLine() => View();
+  [HttpGet]
+  public async Task<IActionResult> UpdateAirline(int? id)
   {
     Aerolinea? data = new();
     if (id == null)

@@ -18,7 +18,9 @@ body {
 }
 
 label,
-option {
+.form-select,
+option,
+input[type=date] {
   color: #008cba;
   font-weight: bold;
 }
@@ -53,4 +55,15 @@ tbody tr {
   border-radius: 0;
   border-width: 0px;
   background-color: transparent;
+}
+
+/* form-control input focus style */
+.form-control:focus,
+.form-select:focus {
+  box-shadow: 0 0 0 0.09rem rgb(67 172 106 / 25%)
+}
+
+/* error hadler */
+.text-danger {
+  font-size: 0.7rem;
 }
