@@ -2,21 +2,25 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SchuvarItinerary.Models;
+using SchuvarItinerary.Models.ViewModels;
 
 namespace SchuvarItinerary.Controllers;
 
 public class HomeController : Controller
 {
-  private readonly SchuvarItineraryContext context;
+  private readonly SchuvarItineraryContext dbContext;
 
-  public HomeController(SchuvarItineraryContext context)
+  public HomeController(SchuvarItineraryContext dbContext)
   {
-    this.context = context;
+    this.dbContext = dbContext;
   }
 
-  public IActionResult Index()
+  public async Task<IActionResult> Index()
   {
-    return View();
+    var flyCustomerResult = dbContext.FlyCustomers.Include(c => c.IdCustomerNavigation)
+    .Include(a => a.IdAerolineaNavigation);
+
+    return View(await flyCustomerResult.ToListAsync());
   }
 
   public IActionResult Privacy()
