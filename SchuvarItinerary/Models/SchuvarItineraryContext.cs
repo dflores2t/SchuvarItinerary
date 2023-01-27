@@ -21,7 +21,6 @@ public partial class SchuvarItineraryContext : DbContext
 
     public virtual DbSet<FlyCustomer> FlyCustomers { get; set; }
 
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Aerolinea>(entity =>
@@ -56,8 +55,8 @@ public partial class SchuvarItineraryContext : DbContext
 
             entity.ToTable("FlyCustomer");
 
-            entity.Property(e => e.Arrivals).HasColumnType("datetime");
-            entity.Property(e => e.Departures).HasColumnType("datetime");
+            entity.Property(e => e.Arrivals).HasColumnType("date");
+            entity.Property(e => e.Departures).HasColumnType("date");
             entity.Property(e => e.Localizer)
                 .HasMaxLength(10)
                 .IsUnicode(false);

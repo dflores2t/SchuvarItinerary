@@ -45,8 +45,8 @@ public class SettingsController : Controller
     ViewAirLine result = new()
     {
       IdAerolinea = data!.IdAerolinea,
-      AerolineaName = data.AerolineaName,
-      AeroDescription = data.AeroDescription
+      AerolineaName = data.AerolineaName.ToUpper(),
+      AeroDescription = data.AeroDescription.ToUpper()
     };
     return View(result);
   }
