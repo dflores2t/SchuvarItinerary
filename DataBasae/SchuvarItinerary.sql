@@ -33,8 +33,8 @@ create table FlyCustomer
   IdAerolinea INT not null,
   Route VARCHAR(20) not null,
   Localizer VARCHAR(10) not null,
-  Departures DATETIME not null,
-  Arrivals DATETIME not null
+  Departures DATE not null,
+  Arrivals DATE not null
     CONSTRAINT pk_IdFly_FlyCustomer primary KEY(IdFly),
   constraint fk_IdCustomer_FlyCustomer_Customer FOREIGN KEY(IdCustomer) REFERENCES Customer(IdCustomer),
   CONSTRAINT fk_IdAerolinea_FlyCustomer_Aerolinea FOREIGN KEY(IdAerolinea) REFERENCES Aerolinea(IdAerolinea)
