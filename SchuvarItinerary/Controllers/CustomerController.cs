@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-using SchuvarItinerary.Models;
+using SchuvarItinerary.DataBase;
 using SchuvarItinerary.Models.ViewModels;
 
 namespace SchuvarItinerary.Controllers;
@@ -10,9 +10,9 @@ namespace SchuvarItinerary.Controllers;
 public class CustomerController : Controller
 {
   //DI Db connection.
-  private readonly SchuvarItineraryContext dbContext;
+  private readonly SchuvaritineraryContext dbContext;
 
-  public CustomerController(SchuvarItineraryContext DbContext)
+  public CustomerController(SchuvaritineraryContext DbContext)
   {
     dbContext = DbContext;
   }
@@ -20,7 +20,7 @@ public class CustomerController : Controller
   #region GetEndPoint
   public ViewResult AddCustomerFlight()
   {
-    ViewData["Aerolinea"] = new SelectList(dbContext.Aerolineas, "IdAerolinea", "AeroDescription");
+    ViewData["Aerolinea"] = new SelectList(dbContext.Aerolineas, "AerolineaId", "AerolineaFullname");
     return View();
   }
   #endregion
@@ -39,37 +39,37 @@ public class CustomerController : Controller
 
     Customer customer = new()
     {
-      FullName = model!.FullName.ToUpper(),
-      Contact = model!.Contact
+      CustomerFullname = model!.CustomerFullName.ToUpper(),
+      CustomerPhone = model.CustomerPhone!
     };
     try
     {
-      if (!CustomerExist(model.Contact))
+      if (!CustomerExist(model.CustomerPhone!))
       {
         dbContext.Customers.Add(customer);
         await dbContext.SaveChangesAsync();
       }
       else
       {
-        customer = dbContext.Customers.FirstOrDefault(d => d.Contact == model.Contact)!;
+        customer = dbContext.Customers.FirstOrDefault(d => d.CustomerPhone == model.CustomerPhone)!;
       }
     }
     catch (DbUpdateConcurrencyException ex)
     {
       ViewBag.Error = ex.Message;
     }
-    FlyCustomer customerItinerary = new()
+    Flycustomer customerItinerary = new()
     {
-      IdCustomer = customer.IdCustomer,
-      IdAerolinea = model.Flight!.IdAerolinea,
-      Route = model.Flight.Route.ToUpper(),
-      Localizer = model.Flight.Localizer.ToUpper(),
-      Departures = model.Flight.Departures,
-      Arrivals = model.Flight.Arrivals
+      FlycustomerIdcustomer = customer.CustomerId,
+      FlycustomerIdaerolinea = model.Flight!.IdAerolinea,
+      FlycustomerRoute = model.Flight.Route.ToUpper(),
+      FlycustomerLocalyzer = model.Flight.Localizer.ToUpper(),
+      FlycustomerDeparture = model.Flight.Departures,
+      FlycustomerArrivals = model.Flight.Arrivals
     };
     try
     {
-      dbContext.FlyCustomers.Add(customerItinerary);
+      dbContext.Flycustomers.Add(customerItinerary);
       await dbContext.SaveChangesAsync();
     }
     catch (DbUpdateConcurrencyException ex)
@@ -80,21 +80,21 @@ public class CustomerController : Controller
   }
   [HttpPost]
   [ValidateAntiForgeryToken]
-  public JsonResult FindCustomer(int phone)
+  public JsonResult FindCustomer(string phone)
   {
     //search if exitst customer by phone numbre
     var customer = from c in dbContext.Customers
                    select c;
-    if (!string.IsNullOrEmpty(phone.ToString()))
+    if (!string.IsNullOrEmpty(phone))
     {
-      customer = customer.Where(d => d.Contact == phone);
+      customer = customer.Where(d => d.CustomerPhone == phone);
     }
     return Json(JsonConvert.SerializeObject(customer));
   }
   #endregion
 
-  private bool CustomerExist(int phone)
+  private bool CustomerExist(string phone)
   {
-    return dbContext.Customers.Any(d => d.Contact == phone);
+    return dbContext.Customers.Any(d => d.CustomerPhone == phone);
   }
 }

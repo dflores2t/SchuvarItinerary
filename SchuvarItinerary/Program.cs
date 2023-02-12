@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using SchuvarItinerary.Models;
+using SchuvarItinerary.DataBase;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,8 +7,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 //using di tu use dbconnection.
-builder.Services.AddDbContext<SchuvarItineraryContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DbConnection")));
-
+// builder.Services.AddDbContext<SchuvarItineraryContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DbConnection")));
+builder.Services.AddDbContext<SchuvaritineraryContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("PgDbConnection")));
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

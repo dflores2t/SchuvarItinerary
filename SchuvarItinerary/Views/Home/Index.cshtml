@@ -1,4 +1,5 @@
-﻿@model IEnumerable<FlyCustomer>
+﻿@using SchuvarItinerary.DataBase
+@model IEnumerable<Flycustomer>
 
 @{
   ViewData["Title"] = "Home Page";
@@ -14,23 +15,23 @@
     {
       <div class="col-md-6 mt-1">
         <div class="card bg-secondary">
-          <div class="card-header d-flex justify-content-between text-white" id="@data.IdFly">
-            <span><i class="fas fa-map-marker-alt"> @data.Localizer</i></span> <span class="text-end"><i
-              class="fas fa-mobile-alt"> @data.IdCustomerNavigation.Contact</i></span>
+          <div class="card-header d-flex justify-content-between text-white" id="@data.FlycustomerId">
+            <span><i class="fas fa-map-marker-alt"> @data.FlycustomerLocalyzer</i></span> <span class="text-end"><i
+              class="fas fa-mobile-alt"> @data.FlycustomerIdcustomerNavigation.CustomerPhone</i></span>
           </div>
           <div class="card-body">
-            <p class="lead text-center">@data.IdCustomerNavigation.FullName</p>
+            <p class="lead text-center">@data.FlycustomerIdcustomerNavigation.CustomerFullname</p>
             <div class="d-flex justify-content-around">
-              <p class="card-text">DEPARTURE <br>@data.Departures.ToShortDateString()</p>
-              @if (data.Arrivals != data.Departures)
+              <p class="card-text">DEPARTURE <br>@data.FlycustomerDeparture</p>
+              @if (data.FlycustomerArrivals  != data.FlycustomerDeparture)
               {
-                <p class="card-text">ARRIVALS <br> @data.Arrivals.ToShortDateString()</p>
+                <p class="card-text">ARRIVALS <br> @data.FlycustomerArrivals</p>
               }
             </div>
             <a href="#" class="btn btn-primary">FILL FORM</a>
           </div>
           <div class="card-footer text-muted">
-            <i class="fas fa-plane"></i> @data.IdAerolineaNavigation.AeroDescription :: @data.Route
+            <i class="fas fa-plane"></i> @data.FlycustomerIdaerolineaNavigation.AerolineaFullname :: @data.FlycustomerRoute
           </div>
         </div>
       </div>
@@ -41,8 +42,9 @@
 </div>
 
 <script>
+  //colors for each card render on home page bi #id
   let headerColor = ['#5BA4CF', '#298FCA', "#026AA7", '#055ABC', '#094C72', '#0C3953', '#7BC86C', '#61BD4F', '#5AAC44', '#519839', '#49852E', '#3F6F21', '#FFAB4A', '#E99E40', '#D29034', '#BB8129', '#A0711C', '#5DD3E5', '#29CCE5', '#36405F', '#00AECC', '#6E2F1A', '#0082A0', '#006988']
-  let idCard = @Html.Raw(Json.Serialize(Model.Select(h=>h.IdFly)))
+  let idCard = @Html.Raw(Json.Serialize(Model.Select(h=>h.FlycustomerId)))
     idCard.forEach(x => {
       let carHeader = document.getElementById(`${x}`).style.backgroundColor = headerColor[Math.floor(Math.random() * headerColor.length)];
     })

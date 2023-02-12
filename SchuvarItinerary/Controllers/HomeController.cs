@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using SchuvarItinerary.DataBase;
 using SchuvarItinerary.Models;
 using SchuvarItinerary.Models.ViewModels;
 
@@ -8,9 +9,9 @@ namespace SchuvarItinerary.Controllers;
 
 public class HomeController : Controller
 {
-  private readonly SchuvarItineraryContext dbContext;
+  private readonly SchuvaritineraryContext dbContext;
 
-  public HomeController(SchuvarItineraryContext dbContext)
+  public HomeController(SchuvaritineraryContext dbContext)
   {
     this.dbContext = dbContext;
   }
@@ -18,10 +19,10 @@ public class HomeController : Controller
   public async Task<IActionResult> Index()
   {
     string today = @DateTime.Now.AddDays(3).ToShortDateString();
-    var flyCustomerResult = dbContext.FlyCustomers
-    .Where(d => d.Departures == DateTime.Parse(today))
-    .Include(c => c.IdCustomerNavigation)
-    .Include(a => a.IdAerolineaNavigation);
+    var flyCustomerResult = dbContext.Flycustomers
+    .Where(d => d.FlycustomerDeparture ==  DateOnly.Parse(today))
+    .Include(c => c.FlycustomerIdcustomerNavigation)
+    .Include(a => a.FlycustomerIdaerolineaNavigation);
 
     return View(await flyCustomerResult.ToListAsync());
   }

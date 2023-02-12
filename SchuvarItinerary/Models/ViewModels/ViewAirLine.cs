@@ -1,5 +1,5 @@
 using System.ComponentModel.DataAnnotations;
-using SchuvarItinerary.Models;
+using SchuvarItinerary.DataBase;
 namespace SchuvarItinerary.Models.ViewModels;
 
 public class ViewAirLine
@@ -8,10 +8,10 @@ public class ViewAirLine
   { }
   public ViewAirLine(Aerolinea model)
   {
-    IdAerolinea = model.IdAerolinea;
-    AerolineaName = model.AerolineaName;
-    AeroDescription = model.AeroDescription;
-    IsDeleted = model.IsDeleted;
+    IdAerolinea = model.AerolineaId;
+    AerolineaName = model.AerolineaShortname;
+    AeroDescription = model.AerolineaFullname;
+    IsDeleted = model.AerolineaIsdeleted;
   }
   [Display(Name = "Id")]
   public int IdAerolinea { get; set; }

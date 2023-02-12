@@ -3,16 +3,16 @@ using System.Runtime.Intrinsics.X86;
 using System.Reflection.PortableExecutable;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using SchuvarItinerary.Models;
+using SchuvarItinerary.DataBase;
 using SchuvarItinerary.Models.ViewModels;
 
 namespace SchuvarItinerary.Controllers;
 
 public class SettingsController : Controller
 {
-  private readonly SchuvarItineraryContext dbContext;
+  private readonly SchuvaritineraryContext dbContext;
 
-  public SettingsController(SchuvarItineraryContext dbContext)
+  public SettingsController(SchuvaritineraryContext dbContext)
   {
     this.dbContext = dbContext;
   }
@@ -21,7 +21,7 @@ public class SettingsController : Controller
   public async Task<ViewResult> Index()
   {
     var result = new List<ViewAirLine>();
-    result = await dbContext.Aerolineas.Where(d => d.IsDeleted == false).Select(d => new ViewAirLine(d)).ToListAsync();
+    result = await dbContext.Aerolineas.Where(d => d.AerolineaIsdeleted == false).Select(d => new ViewAirLine(d)).ToListAsync();
     return View(result);
   }
   [HttpGet]
@@ -44,9 +44,9 @@ public class SettingsController : Controller
     }
     ViewAirLine result = new()
     {
-      IdAerolinea = data!.IdAerolinea,
-      AerolineaName = data.AerolineaName.ToUpper(),
-      AeroDescription = data.AeroDescription.ToUpper()
+      IdAerolinea = data!.AerolineaId,
+      AerolineaName = data.AerolineaShortname.ToUpper(),
+      AeroDescription = data.AerolineaFullname.ToUpper()
     };
     return View(result);
   }
@@ -65,9 +65,9 @@ public class SettingsController : Controller
     }
     Aerolinea airLine = new()
     {
-      AerolineaName = model.AerolineaName!.ToUpper(),
-      AeroDescription = model.AeroDescription!.ToUpper(),
-      IsDeleted = false
+     AerolineaShortname = model.AerolineaName!.ToUpper(),
+     AerolineaFullname= model.AeroDescription!.ToUpper(),
+     AerolineaIsdeleted = false
     };
     dbContext.Add(airLine);
     try
@@ -91,23 +91,23 @@ public class SettingsController : Controller
       ViewBag.ErrorMessage = "Data Invalid. please try again!";
       return View(model);
     }
-      Aerolinea airline = new()
-      {
-        IdAerolinea = model.IdAerolinea,
-        AerolineaName = model.AerolineaName!.ToUpper(),
-        AeroDescription = model.AeroDescription!.ToUpper(),
-        IsDeleted = false
-      };
-      try
-      {
-        dbContext.Aerolineas.Update(airline);
-        await dbContext.SaveChangesAsync();
-        ViewBag.Success = $"{model.AerolineaName!.ToUpper()} Data Updated Succesfuly";
-      }
-      catch (DbUpdateException ex)
-      {
-        ViewBag.ErrorMessage = ex.Message;
-      }
+    Aerolinea airline = new()
+    {
+      AerolineaId = model.IdAerolinea,
+      AerolineaShortname = model.AerolineaName!.ToUpper(),
+      AerolineaFullname = model.AeroDescription!.ToUpper(),
+      AerolineaIsdeleted = false
+    };
+    try
+    {
+      dbContext.Aerolineas.Update(airline);
+      await dbContext.SaveChangesAsync();
+      ViewBag.Success = $"{model.AerolineaName!.ToUpper()} Data Updated Succesfuly";
+    }
+    catch (DbUpdateException ex)
+    {
+      ViewBag.ErrorMessage = ex.Message;
+    }
     return RedirectToAction(nameof(Index));
   }
 
@@ -116,7 +116,7 @@ public class SettingsController : Controller
   public async Task<IActionResult> DeleteAirline(int? id)
   {
     Aerolinea? data = await dbContext.Aerolineas.FindAsync(id);
-    data!.IsDeleted = true;
+    data!.AerolineaIsdeleted = true;
     try
     {
       dbContext.Aerolineas.Update(data);
@@ -132,6 +132,6 @@ public class SettingsController : Controller
 
   private bool AerolineaExists(int? id)
   {
-    return dbContext.Aerolineas.Any(e => e.IdAerolinea == id);
+    return dbContext.Aerolineas.Any(e => e.AerolineaId == id);
   }
 }
