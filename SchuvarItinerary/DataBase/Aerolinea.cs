@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace SchuvarItinerary.DataBase;
 
 public partial class Aerolinea
 {
     public int AerolineaId { get; set; }
-
+    [DisplayName("Airline")]
     public string AerolineaShortname { get; set; } = null!;
 
     public string AerolineaFullname { get; set; } = null!;

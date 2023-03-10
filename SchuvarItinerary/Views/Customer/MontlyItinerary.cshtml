@@ -1,0 +1,45 @@
+@model IEnumerable<SchuvarItinerary.DataBase.Flycustomer>
+
+<h2>Montly Itinerary Resume.</h2>
+<div class="row">
+  <div class="col-md-3">
+    <label for="" class="form-label">Filter By Month:</label>
+    <div class="input-group mb-3">
+      <i class="input-group-text fas fa-calendar-alt"></i>
+      <input id="month" type="date" class="form-control" aria-label="Date">
+      <button class="btn btn-primary ">Filter</button>
+    </div>
+  </div>
+  <div>
+    <hr class="border border-primary border-3 opacity-75">
+  </div>
+  <div class=" mb-3">
+    <table class="table table-responsive table-striped table-bordered table-hover text-center">
+      <thead>
+        <tr>
+          @* <th>@Html.DisplayNameFor(h=> h.FlycustomerId)</th> *@
+          <th>@Html.DisplayNameFor(h=> h.FlycustomerIdcustomerNavigation.CustomerFullname)</th>
+          <th>@Html.DisplayNameFor(h=> h.FlycustomerIdaerolineaNavigation.AerolineaShortname)</th>
+          <th>@Html.DisplayNameFor(h=> h.FlycustomerRoute)</th>
+          <th>@Html.DisplayNameFor(h=> h.FlycustomerLocalyzer)</th>
+          <th>@Html.DisplayNameFor(h=> h.FlycustomerDeparture)</th>
+          <th>@Html.DisplayNameFor(h=> h.FlycustomerArrivals)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          @foreach (var data in Model)
+          {
+            @* <td>@data.FlycustomerId</td> *@
+            <td>@data.FlycustomerIdcustomerNavigation.CustomerFullname</td>
+            <td>@data.FlycustomerIdaerolineaNavigation.AerolineaShortname</td>
+            <td>@data.FlycustomerRoute</td>
+            <td>@data.FlycustomerLocalyzer</td>
+            <td>@Convert.ToDateTime(data.FlycustomerDeparture).ToShortDateString()</td>
+            <td>@Convert.ToDateTime(data.FlycustomerArrivals).ToShortDateString()</td>
+          }
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

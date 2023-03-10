@@ -1,4 +1,3 @@
-using System.Globalization;
 using System.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -25,6 +24,13 @@ public class CustomerController : Controller
     ViewData["Aerolinea"] = new SelectList(dbContext.Aerolineas, "AerolineaId", "AerolineaFullname");
     return View();
   }
+
+  public async Task<ViewResult> MontlyItinerary()
+  {
+    return View(await dbContext.Flycustomers.Include(c => c.FlycustomerIdcustomerNavigation)
+    .Include(a => a.FlycustomerIdaerolineaNavigation).ToListAsync());
+  }
+
   #endregion
 
   #region PostEndPoint

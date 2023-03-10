@@ -30,11 +30,18 @@
                   class="fas fa-laptop-house">
                   Home</i> |</a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link link-light" asp-area="" asp-controller="Customer" asp-action="AddCustomerFlight"><i
-                  class="fas fa-user">
-                  Customer
-                  Flight</i> |</a>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle link-light" data-bs-toggle="dropdown" role="button"
+                aria-haspopup="true" aria-expanded="false"><i class="fas fa-user"> Customer Flight</i></a>
+              <div class="dropdown-menu">
+                <a class="dropdown-item" asp-action="AddCustomerFlight" asp-controller="Customer"><i
+                    class="fas fa-plus">&nbsp;</i>Add Itinerary</a>
+                <a class="dropdown-item" asp-action="MontlyItinerary" asp-controller="Customer"><i
+                    class="fas fa-clipboard-list"></i> Montly Itinerary Resume</a>
+                <a class="dropdown-item" href="#">Something else here</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#">Separated link</a>
+              </div>
             </li>
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle link-light" data-bs-toggle="dropdown" role="button"
