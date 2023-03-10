@@ -26,17 +26,17 @@
         </div>
         <div class="mb-3">
           <label for="AerolineaInconmingFormLink" class="form-label">Incoming Link Form</label>
-          <input type="text" class="form-control" asp-for="FormsLink.AerolineaIncomingForm" placeholder="Incoming form link" data-bs-toggle="tooltip"
+          <input type="text" class="form-control" asp-for="FormsLink!.AerolineaIncomingForm" placeholder="Incoming form link" data-bs-toggle="tooltip"
             data-bs-placement="left" data-bs-custom-class="custom-tooltip"
             data-bs-title="attach incoming form link.">
-          <span asp-validation-for="FormsLink.AerolineaIncomingForm" class="text-danger"></span>
+          <span asp-validation-for="FormsLink!.AerolineaIncomingForm" class="text-danger"></span>
         </div>
         <div class="mb-3">
           <label for="AerolineaOutgoingFomLink" class="form-label">Outgoing Link Form</label>
-          <input type="text" class="form-control" asp-for="FormsLink.AerolineaOutgoingForm" placeholder="Outgoing form link" data-bs-toggle="tooltip"
+          <input type="text" class="form-control" asp-for="FormsLink!.AerolineaOutgoingForm" placeholder="Outgoing form link" data-bs-toggle="tooltip"
             data-bs-placement="left" data-bs-custom-class="custom-tooltip"
             data-bs-title="attach outgoing form link.">
-          <span asp-validation-for="FormsLink.AerolineaOutgoingForm" class="text-danger"></span>
+          <span asp-validation-for="FormsLink!.AerolineaOutgoingForm" class="text-danger"></span>
         </div>
         <div class="mb-3">
           <button type="submit" class="btn btn-primary link-ligth" data-bs-toggle="tooltip"
