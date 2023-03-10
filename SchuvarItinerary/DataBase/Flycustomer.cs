@@ -15,9 +15,11 @@ public partial class Flycustomer
 
     public string FlycustomerLocalyzer { get; set; } = null!;
 
-    public DateOnly? FlycustomerDeparture { get; set; }
+    public DateTime? FlycustomerDeparture { get; set; }
 
-    public DateOnly? FlycustomerArrivals { get; set; }
+    public DateTime? FlycustomerArrivals { get; set; }
+
+    public bool? FlycustomerFilled { get; set; }
 
     public bool? FlycustomerIsdeleted { get; set; }
 

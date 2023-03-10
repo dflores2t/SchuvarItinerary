@@ -1,3 +1,5 @@
+using System.Globalization;
+using System.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -64,8 +66,8 @@ public class CustomerController : Controller
       FlycustomerIdaerolinea = model.Flight!.IdAerolinea,
       FlycustomerRoute = model.Flight.Route.ToUpper(),
       FlycustomerLocalyzer = model.Flight.Localizer.ToUpper(),
-      FlycustomerDeparture = model.Flight.Departures,
-      FlycustomerArrivals = model.Flight.Arrivals
+      FlycustomerDeparture = DateTimeOffset.Parse(model.Flight.Departures.ToString()).UtcDateTime,
+      FlycustomerArrivals = DateTimeOffset.Parse(model.Flight.Arrivals.ToString()).UtcDateTime,
     };
     try
     {
@@ -85,6 +87,7 @@ public class CustomerController : Controller
     //search if exitst customer by phone numbre
     var customer = from c in dbContext.Customers
                    select c;
+
     if (!string.IsNullOrEmpty(phone))
     {
       customer = customer.Where(d => d.CustomerPhone == phone);

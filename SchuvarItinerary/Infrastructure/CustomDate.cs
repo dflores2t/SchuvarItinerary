@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace SchuvarItinerary.Infrastructure;
+[AttributeUsage(AttributeTargets.Class)]
 
 public class CustomDate : Attribute, IModelValidator
 {

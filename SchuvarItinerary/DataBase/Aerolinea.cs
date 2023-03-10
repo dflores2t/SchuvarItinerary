@@ -11,6 +11,8 @@ public partial class Aerolinea
 
     public string AerolineaFullname { get; set; } = null!;
 
+    public string? AerolineFormlinks { get; set; }
+
     public bool? AerolineaIsdeleted { get; set; }
 
     public DateTime? AerolineaDateup { get; set; }

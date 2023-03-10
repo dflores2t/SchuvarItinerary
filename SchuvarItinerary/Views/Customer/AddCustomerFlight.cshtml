@@ -8,7 +8,7 @@
   <div class="col-md-3 offset-md-1">
     <div class="form-floating input-group">
       <div class="input-group-text"><i class="fas fa-mobile-alt"></i></div>
-      <input type="tel" pattern="[0-9]{8}" class="form-control" asp-for="CustomerPhone" placeholder="phone" autofocus>
+      <input type="tel" pattern="[0-9]{4}-[0-9]{4}" oninput="phoneFormat(this.value)" class="form-control" asp-for="CustomerPhone" placeholder="phone" autofocus>
       <label class="ms-4" asp-for="CustomerPhone">Phone Number</label>
     </div>
     <span asp-validation-for="CustomerPhone" class="text-danger"></span>
@@ -67,16 +67,22 @@
     <span asp-validation-for="Flight!.Arrivals" class="text-danger" data-bs-toggle="tooltip" data-bs-placement="right"
       data-bs-custom-class="custom-tooltip"></span>
   </div>
-  <div class="col-md-4 offset-md-1 mt-3">
-    <button type="submit" class="btn btn-primary"><i class="far fa-save" data-bs-toggle="tooltip"
+  <div class="col-10 d-flex justify-content-center offset-md-1 mt-3 gap-1">
+  <div class="col-md-3  mt-1">
+    <button type="submit" class="btn btn-primary btne"><i class="far fa-save" data-bs-toggle="tooltip"
         data-bs-title="Save Information" data-bs-placement="left"
         data-bs-custom-class="custom-tooltip">&nbsp;Save&nbsp;&nbsp;&nbsp;&nbsp;</i></button>
-    <button type="reset" class="btn btn-info" data-bs-toggle="tooltip" data-bs-title="Clear all information on textbox"
+  </div>
+  <div class="col-md-3  mt-1">
+    <button type="reset" class="btn btn-info btne" data-bs-toggle="tooltip" data-bs-title="Clear all information on textbox"
       data-bs-custom-class="custom-tooltip" data-bs-placement="bottom"><i
         class="fas fa-broom">&nbsp;Reset&nbsp;&nbsp;</i></button>
-    <a asp-action="Index" asp-controller="Home" class="btn btn-success" data-bs-toggle="tooltip"
+  </div>
+  <div class="col-md-3  mt-1">
+    <a asp-action="Index" asp-controller="Home" class="btn btn-success btne" data-bs-toggle="tooltip"
       data-bs-title="Retur to Home Page" data-bs-custom-class="custom-tooltip" data-bs-placement="right"><i
-        class="fas fa-undo">&nbsp;Go Back&nbsp;</i></a>
+        class="fas fa-undo">&nbsp;Back</i></a>
+  </div>
   </div>
 </form>
 
@@ -104,31 +110,45 @@
 await Html.RenderPartialAsync("_ValidationScriptsPartial");
 }
 <script>
-  let txtContact = document.querySelector("#Contact");
-  let txtName = document.querySelector("#FullName");
-  let departures = document.querySelector('#Flight_Departures').valueAsDate = new Date()
-  let arrivals = document.querySelector('#Flight_Arrivals').valueAsDate = new Date()
-  var token = document.querySelector('input[name="__RequestVerificationToken"').value;
-  document.querySelector('#Flight_Departures').addEventListener('change', (e) => {
-    console.log(e.target.value)
-  })
-  txtContact.addEventListener("blur", () => {
-    url = "@Url.Content("~/Customer/FindCustomer")" + "?phone=" + txtContact.value;
-    fetch(url, {
-      method: "POST", headers: {
-        'RequestVerificationToken': token
+      let txtCustomerPhone = document.querySelector("#CustomerPhone");
+      let txtName = document.querySelector("#CustomerFullName");
+      let departures = document.querySelector('#Flight_Departures').valueAsDate = new Date()
+      let arrivals = document.querySelector('#Flight_Arrivals')
+      arrivals.valueAsDate = new Date()
+      var token = document.querySelector('input[name="__RequestVerificationToken"').value;
+      document.querySelector('#Flight_Departures').addEventListener('change', (e) => {
+       arrivals.value= e.target.value
+
+      })
+      txtCustomerPhone.addEventListener("blur", () => {
+        if(txtCustomerPhone.value !== ''){
+        url = "@Url.Content("~/Customer/FindCustomer")" + "?phone=" + txtCustomerPhone.value;
+        fetch(url, {
+          method: "POST", headers: {
+            'RequestVerificationToken': token
+          }
+        })
+          .then((result) => {
+            if (result.ok) {
+              return result.json();
+            }
+          })
+          .then(data => {
+            let customerName = JSON.parse(data);
+            txtName.value = customerName.length > 0 ? customerName[0].CustomerFullname : "";
+            txtName.readOnly = customerName.length > 0 ? true : false;
+          })
       }
-    })
-      .then((result) => {
-        if (result.ok) {
-          return result.json();
-        }
       })
-      .then(data => {
-        let customerName = JSON.parse(data);
-        txtName.value = customerName.length > 0 ? customerName[0].FullName : "";
-        txtName.readOnly = customerName.length > 0 ? true : false;
-      })
-  })
+
+  const phoneFormat =(e)=>{
+    let txtCustomerPhone = document.querySelector('#CustomerPhone')
+    e = e.replace(/\D/g,'');
+    if(e.length > 4){
+      e = e.slice(0,4) + '-' + e.slice(4,8)
+    }
+    txtCustomerPhone.value= e;
+  };
+
 </script>
 }

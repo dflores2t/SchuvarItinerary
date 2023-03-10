@@ -18,9 +18,9 @@ public class HomeController : Controller
 
   public async Task<IActionResult> Index()
   {
-    string today = @DateTime.Now.AddDays(3).ToShortDateString();
+    string today = @DateTime.Now.AddDays(3).ToShortDateString(); //ToShortDateString();
     var flyCustomerResult = dbContext.Flycustomers
-    .Where(d => d.FlycustomerDeparture ==  DateOnly.Parse(today))
+    .Where(d => d.FlycustomerDeparture == DateTimeOffset.Parse(today).UtcDateTime)
     .Include(c => c.FlycustomerIdcustomerNavigation)
     .Include(a => a.FlycustomerIdaerolineaNavigation);
 

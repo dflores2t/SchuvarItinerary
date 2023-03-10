@@ -22,7 +22,7 @@ public class ViewFlightModel
 
   [Required(ErrorMessage = "This field is required!")]
   [DataType(DataType.Date)]
-  public DateOnly Departures { get; set; }
+  public DateTime Departures { get; set; }
   [DataType(DataType.Date)]
-  public DateOnly Arrivals { get; set; }
+  public DateTime Arrivals { get; set; }
 }

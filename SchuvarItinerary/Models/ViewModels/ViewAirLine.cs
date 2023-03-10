@@ -1,3 +1,4 @@
+using System.Reflection;
 using System.ComponentModel.DataAnnotations;
 using SchuvarItinerary.DataBase;
 namespace SchuvarItinerary.Models.ViewModels;
@@ -11,7 +12,7 @@ public class ViewAirLine
     IdAerolinea = model.AerolineaId;
     AerolineaName = model.AerolineaShortname;
     AeroDescription = model.AerolineaFullname;
-    IsDeleted = model.AerolineaIsdeleted;
+    AerolineaIsDeleted = model.AerolineaIsdeleted;
   }
   [Display(Name = "Id")]
   public int IdAerolinea { get; set; }
@@ -26,5 +27,14 @@ public class ViewAirLine
   /// <summary>
   ///IsDelete return true if record is deleted
   /// </summary>
-  public bool? IsDeleted { get; set; } = false;
+  public bool? AerolineaIsDeleted { get; set; } = false;
+  public DateTime? AerolineaDateup { get; set; }
+
+  public AerolineaFormsLink? FormsLink { get; set; }
+}
+
+public class AerolineaFormsLink
+{
+  public string? AerolineaIncomingForm { get; set; }
+  public string? AerolineaOutgoingForm { get; set; }
 }

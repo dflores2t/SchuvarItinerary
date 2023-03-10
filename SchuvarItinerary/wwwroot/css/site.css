@@ -67,3 +67,12 @@ tbody tr {
 .text-danger {
   font-size: 0.7rem;
 }
+
+/* Buttons full size */
+.btne {
+  width: 100%;
+}
+
+.input {
+  width: 100%;
+}

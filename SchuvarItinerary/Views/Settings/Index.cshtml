@@ -13,7 +13,7 @@
   <table class="table table-responsive table-striped table-bordered table-hover mt-2 list-airline-table">
   <thead>
     <tr class="text-center">
-      <th>@Html.DisplayNameFor(h=> h.IdAerolinea)</th>
+      @* <th>@Html.DisplayNameFor(h=> h.IdAerolinea)</th> *@
       <th>@Html.DisplayNameFor(h=> h.AerolineaName)</th>
       <th>@Html.DisplayNameFor(h=> h.AeroDescription)</th>
       <th colspan="2">Actions</th>
@@ -23,7 +23,7 @@
     @foreach (var data in Model)
       {
         <tr class="list-airline-row">
-          <td>@data.IdAerolinea</td>
+          @* <td>@data.IdAerolinea</td> *@
           <td>@data.AerolineaName</td>
           <td>@data.AeroDescription</td>
           <td class="text-center" style="width:7%">
@@ -45,13 +45,13 @@
     </tbody>
     <tfoot>
       <tr>
-        <td colspan=4>Total Registro</td>
-        <td>@Model.Count()</td>
+        <td colspan=3>Total Registro</td>
+        <td class="text-center">@Model.Count()</td>
       </tr>
     </tfoot>
   </table>
 }
 <div class="alert @(Model.Count() < 1 ? "alert-info" : "") text-white text-center mt-5 col-md-5 mx-auto">
-  <h4> No Data Found </h4>
+  <h4> No Data To Show </h4>
 </div>
-<div
+

@@ -8,6 +8,7 @@ builder.Services.AddControllersWithViews();
 
 //using di tu use dbconnection.
 // builder.Services.AddDbContext<SchuvarItineraryContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DbConnection")));
+
 builder.Services.AddDbContext<SchuvaritineraryContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("PgDbConnection")));
 var app = builder.Build();
 
