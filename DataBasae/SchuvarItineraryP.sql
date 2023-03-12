@@ -64,6 +64,7 @@ create table schu.aerolinea(
 	aerolinea_id integer generated always as identity,
 	aerolinea_shortname varchar(2) not null,
 	aerolinea_fullname varchar(50) not null,
+	aeroline_formlinks json not null,
 	aerolinea_isDeleted boolean default  false,
 	aerolinea_dateup timestamp default now(),
 	aerolinea_datemodify timestamp default now(),
