@@ -16,15 +16,35 @@ public class HomeController : Controller
     this.dbContext = dbContext;
   }
 
-  public async Task<IActionResult> Index()
+  public async Task<IActionResult> Index(string searchString)
   {
-    string today = @DateTime.Now.AddDays(3).ToShortDateString(); //ToShortDateString();
-    var flyCustomerResult = dbContext.Flycustomers
-    .Where(d => d.FlycustomerDeparture == DateTimeOffset.Parse(today).UtcDateTime)
-    .Include(c => c.FlycustomerIdcustomerNavigation)
-    .Include(a => a.FlycustomerIdaerolineaNavigation);
+    if(dbContext.Flycustomers == null){
+      return Problem("Table FlyCustomer is emthy");
+    }
+    var data = from dd in dbContext.Flycustomers
+               select dd;
 
-    return View(await flyCustomerResult.ToListAsync());
+    if(!String.IsNullOrEmpty(searchString)){
+      data = data.Where(s => s.FlycustomerIdcustomerNavigation.CustomerFullname.Contains(searchString))
+      .Include(c => c.FlycustomerIdcustomerNavigation)
+      .Include(a => a.FlycustomerIdaerolineaNavigation);
+    }
+
+    string today = @DateTime.Now.AddDays(3).ToShortDateString(); //ToShortDateString();
+    try
+    {
+      // var flyCustomerResult = dbContext.Flycustomers
+      data = data
+      .Where(d => d.FlycustomerDeparture == DateTimeOffset.Parse(today).UtcDateTime)
+      .Include(c => c.FlycustomerIdcustomerNavigation)
+      .Include(a => a.FlycustomerIdaerolineaNavigation);
+      // return View(await flyCustomerResult.ToListAsync());
+      return View(await data.ToListAsync());
+    }
+    catch (Exception ex)
+    {
+      throw new Exception(ex.Message);
+    }
   }
 
   public IActionResult Privacy()

@@ -1,14 +1,29 @@
 @model IEnumerable<SchuvarItinerary.DataBase.Flycustomer>
 
+
 <h2>Montly Itinerary Resume.</h2>
-<div class="row">
-  <div class="col-md-3">
-    <label for="" class="form-label">Filter By Month:</label>
-    <div class="input-group mb-3">
-      <i class="input-group-text fas fa-calendar-alt"></i>
-      <input id="month" type="date" class="form-control" aria-label="Date">
-      <button class="btn btn-primary ">Filter</button>
-    </div>
+@if (Model.Count() < 1)
+{
+  <div class="alert @(Model.Count() < 1 ? "alert-info" : "") text-white text-center mt-5 col-md-5 mx-auto">
+  <h4> No Data To Show </h4>
+</div>
+}
+else
+{
+
+
+  <div class="row">
+  <div class="col-12">
+    <form asp-controller="Customer" asp-action="MontlyItinerary">
+      <div class="col-md-3">
+        <label for="" class="form-label">Filter By Month:</label>
+        <div class="input-group mb-5">
+          <i class="input-group-text fas fa-calendar-alt"></i>
+          <input id="month" type="date" name='searchString' class="form-control" aria-label="Date">
+          <input type="submit" value="Filter" class="btn btn-primary" />
+        </div>
+
+    </form>
   </div>
   <div>
     <hr class="border border-primary border-3 opacity-75">
@@ -27,19 +42,21 @@
         </tr>
       </thead>
       <tbody>
-        <tr>
-          @foreach (var data in Model)
+        @foreach (var data in Model)
           {
-            @* <td>@data.FlycustomerId</td> *@
-            <td>@data.FlycustomerIdcustomerNavigation.CustomerFullname</td>
-            <td>@data.FlycustomerIdaerolineaNavigation.AerolineaShortname</td>
-            <td>@data.FlycustomerRoute</td>
-            <td>@data.FlycustomerLocalyzer</td>
-            <td>@Convert.ToDateTime(data.FlycustomerDeparture).ToShortDateString()</td>
-            <td>@Convert.ToDateTime(data.FlycustomerArrivals).ToShortDateString()</td>
+            <tr>
+              @* <td>@data.FlycustomerId</td> *@
+              <td>@data.FlycustomerIdcustomerNavigation.CustomerFullname</td>
+              <td>@data.FlycustomerIdaerolineaNavigation.AerolineaShortname</td>
+              <td>@data.FlycustomerRoute</td>
+              <td>@data.FlycustomerLocalyzer</td>
+              <td>@Convert.ToDateTime(data.FlycustomerDeparture).ToShortDateString()</td>
+              <td>@Convert.ToDateTime(data.FlycustomerArrivals).ToShortDateString()</td>
+            </tr>
           }
-        </tr>
-      </tbody>
-    </table>
+        </tbody>
+      </table>
+    </div>
   </div>
-</div>
+
+}
