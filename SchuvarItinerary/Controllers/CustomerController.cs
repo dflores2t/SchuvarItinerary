@@ -1,3 +1,4 @@
+using System.Data.Common;
 using System.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -19,16 +20,39 @@ public class CustomerController : Controller
   }
 
   #region GetEndPoint
+
+  public async Task<IActionResult> MontlyItinerary(DateTime? month)
+  {
+    if (dbContext.Flycustomers == null)
+    {
+      return Problem("Table FlyCustmoer is empthy");
+    }
+    month ??= DateTime.Now;
+    var data = from rows in dbContext.Flycustomers.AsQueryable()
+               select rows;
+
+    if (data == null)
+    {
+      return NotFound();
+    }
+    try
+    {
+      data = data
+       .Where(d => d.FlycustomerDeparture!.Value.Year == month.Value.Year && d.FlycustomerDeparture.Value.Month == month.Value.Month)
+       .Include(c => c.FlycustomerIdcustomerNavigation)
+       .Include(a => a.FlycustomerIdaerolineaNavigation);
+    }
+    catch (System.Exception ex)
+    {
+      ViewBag.ErrorMessage = ex.Message;
+    }
+    return View(await data.ToListAsync());
+  }
+
   public ViewResult AddCustomerFlight()
   {
     ViewData["Aerolinea"] = new SelectList(dbContext.Aerolineas, "AerolineaId", "AerolineaFullname");
     return View();
-  }
-
-  public async Task<ViewResult> MontlyItinerary()
-  {
-    return View(await dbContext.Flycustomers.Include(c => c.FlycustomerIdcustomerNavigation)
-    .Include(a => a.FlycustomerIdaerolineaNavigation).ToListAsync());
   }
 
   #endregion

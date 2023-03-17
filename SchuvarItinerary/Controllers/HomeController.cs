@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.Data.Common;
+using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SchuvarItinerary.DataBase;
@@ -18,33 +19,35 @@ public class HomeController : Controller
 
   public async Task<IActionResult> Index(string searchString)
   {
-    if(dbContext.Flycustomers == null){
-      return Problem("Table FlyCustomer is emthy");
+    if (dbContext.Flycustomers == null)
+    {
+      return Problem("Table FlyCustomer is empthy");
     }
     var data = from dd in dbContext.Flycustomers
                select dd;
 
-    if(!String.IsNullOrEmpty(searchString)){
-      data = data.Where(s => s.FlycustomerIdcustomerNavigation.CustomerFullname.Contains(searchString))
+    if (!String.IsNullOrEmpty(searchString))
+    {
+      data = data.Where(s => s.FlycustomerIdcustomerNavigation.CustomerFullname.Contains(searchString.ToUpper()))
       .Include(c => c.FlycustomerIdcustomerNavigation)
       .Include(a => a.FlycustomerIdaerolineaNavigation);
+
+      return View(await data.ToListAsync());
     }
 
-    string today = @DateTime.Now.AddDays(3).ToShortDateString(); //ToShortDateString();
+    string today = @DateTime.Now.AddDays(3).ToShortDateString();
     try
     {
-      // var flyCustomerResult = dbContext.Flycustomers
       data = data
       .Where(d => d.FlycustomerDeparture == DateTimeOffset.Parse(today).UtcDateTime)
       .Include(c => c.FlycustomerIdcustomerNavigation)
       .Include(a => a.FlycustomerIdaerolineaNavigation);
-      // return View(await flyCustomerResult.ToListAsync());
-      return View(await data.ToListAsync());
     }
     catch (Exception ex)
     {
-      throw new Exception(ex.Message);
+      ViewBag.ErrorMessage = ex.Message;
     }
+    return View(await data.ToListAsync());
   }
 
   public IActionResult Privacy()
