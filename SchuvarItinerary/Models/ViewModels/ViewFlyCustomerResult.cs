@@ -4,6 +4,7 @@ namespace SchuvarItinerary.Models.ViewModels;
 
 public class ViewFlyCustomerResult
 {
+  public int FlyCustomerId { get; set; }
   public string? FlycustomerLocalyzer { get; set; }
   public string? CustomerPhone { get; set; }
   public string? CustomerFullName { get; set; }

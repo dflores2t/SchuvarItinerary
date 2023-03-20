@@ -1,16 +1,10 @@
 ﻿@using SchuvarItinerary.DataBase
 @using SchuvarItinerary.Models.ViewModels
 @using Newtonsoft.Json
-@model IEnumerable<Flycustomer>
+@model IEnumerable<ViewFlyCustomerResult>
 
 @{
   ViewData["Title"] = "Home Page";
-  AerolineaFormsLink formLinks = new();
-  foreach (var link in Model)
-  {
-    formLinks =
-    JsonConvert.DeserializeObject<AerolineaFormsLink>(link.FlycustomerIdaerolineaNavigation.AerolineFormlinks!)!;
-  }
 }
 <div class="container">
   <div class="row">
@@ -43,25 +37,28 @@
       {
         <div class="col-md-6 mt-1">
           <div class="card bg-secondary">
-            <div class="card-header d-flex justify-content-between text-white" id="@data.FlycustomerId">
+            <div class="card-header d-flex justify-content-between text-white" id="@data.FlyCustomerId">
               <span><i class="fas fa-map-pin"> @data.FlycustomerLocalyzer</i></span> <span class="text-end"><i
-                class="fas fa-mobile-alt"> @data.FlycustomerIdcustomerNavigation.CustomerPhone</i></span>
+                class="fas fa-mobile-alt"> @data.CustomerPhone</i></span>
             </div>
             <div class="card-body text-warning fw-bold">
-              <p class="lead fw-bold text-center">@data.FlycustomerIdcustomerNavigation.CustomerFullname</p>
+              <p class="lead fw-bold text-center">@data.CustomerFullName</p>
               <div class="d-flex justify-content-around">
                 <p class="card-text">DEPARTURE <br><a
-                  href="@formLinks.AerolineaOutgoingForm">@Convert.ToDateTime(data.FlycustomerDeparture).ToShortDateString()</a>
+                  href="@data.FormsLink!.AerolineaOutgoingForm">@Convert.ToDateTime(data.FlyCustomerDeparture).ToShortDateString()</a>
                 </p>
-                @if (data.FlycustomerArrivals != data.FlycustomerDeparture)
+                @if (data.FlyCustomerArrivals != data.FlyCustomerDeparture)
                 {
-                  <p class="card-text">ARRIVALS <br> <a@Convert.ToDateTime><a href="@formLinks.AerolineaIncomingForm">@Convert.ToDateTime(data.FlycustomerArrivals).ToShortDateString()</a></p>
+                  <p class="card-text">ARRIVALS <br>
+                    <a@Convert.ToDateTime><a
+                    href="@data.FormsLink.AerolineaIncomingForm">@Convert.ToDateTime(data.FlyCustomerArrivals).ToShortDateString()</a>
+                  </p>
                 }
               </div>
               <a href="#" class="btn btn-primary">FILL FORM</a>
             </div>
             <div class="card-footer text-muted">
-              <i class="fas fa-plane"></i> @data.FlycustomerIdaerolineaNavigation.AerolineaFullname ::
+              <i class="fas fa-plane"></i> @data.AerolineaFullname ::
               <i class="fas fa-map-marker-alt"></i> @data.FlycustomerRoute
             </div>
           </div>
@@ -74,7 +71,7 @@
 <script>
   //colors for each card render on home page bi #id
   let headerColor = ['#5BA4CF', '#298FCA', "#026AA7", '#055ABC', '#094C72', '#0C3953', '#7BC86C', '#61BD4F', '#5AAC44', '#519839', '#49852E', '#3F6F21', '#FFAB4A', '#E99E40', '#D29034', '#BB8129', '#A0711C', '#5DD3E5', '#29CCE5', '#36405F', '#00AECC', '#6E2F1A', '#0082A0', '#006988']
-  let idCard = @Html.Raw(Json.Serialize(Model.Select(h=>h.FlycustomerId)))
+  let idCard = @Html.Raw(Json.Serialize(Model.Select(h=>h.FlyCustomerId)))
     idCard.forEach(x => {
       let carHeader = document.getElementById(`${x}`).style.backgroundColor = headerColor[Math.floor(Math.random() * headerColor.length)];
     })
