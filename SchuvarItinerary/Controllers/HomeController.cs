@@ -41,4 +41,14 @@ public class HomeController : Controller
   {
     return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
   }
+
+  [HttpPost]
+  public async Task<StatusCodeResult> IsFilled(int? id)
+  {
+    if (await HomeIndexContracts.Filled(dbContext, id))
+    {
+      return StatusCode(StatusCodes.Status201Created);
+    }
+    return StatusCode(StatusCodes.Status401Unauthorized);
+  }
 }

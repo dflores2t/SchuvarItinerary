@@ -1,6 +1,4 @@
-﻿@using SchuvarItinerary.DataBase
-@using SchuvarItinerary.Models.ViewModels
-@using Newtonsoft.Json
+﻿@using SchuvarItinerary.Models.ViewModels
 @model IEnumerable<ViewFlyCustomerResult>
 
 @{
@@ -22,10 +20,11 @@
         </div>
       </form>
     </div>
-    <div>
+    <div class="col-12">
       <hr class="border border-primary border-3 opacity-75">
-      <p class="text-warning">Results: @Model.Count().</p>
+      <span class="text-warning">Results: @Model.Count()</span>
     </div>
+
     <div class="col-12">
       @if (Model.Count() < 1)
       {
@@ -33,46 +32,80 @@
           <h4> No Data To Show </h4>
         </div>
       }
-      @foreach (var data in Model)
-      {
-        <div class="col-md-6 mt-1">
-          <div class="card bg-secondary">
-            <div class="card-header d-flex justify-content-between text-white" id="@data.FlyCustomerId">
-              <span><i class="fas fa-map-pin"> @data.FlycustomerLocalyzer</i></span> <span class="text-end"><i
-                class="fas fa-mobile-alt"> @data.CustomerPhone</i></span>
+    </div>
+    @foreach (var data in Model)
+    {
+      <div class="col-md-6 col-xl-4 mt-1">
+
+        <div class="card bg-secondary">
+          <div class="card-header d-flex justify-content-between text-white" id="@data.FlyCustomerId">
+            <span><i class="fas fa-map-pin"> @data.FlycustomerLocalyzer</i></span> <span class="text-end"><i
+              class="fas fa-mobile-alt"> @data.CustomerPhone</i></span>
+          </div>
+
+          <div class="card-body text-warning fw-bold">
+            <p class="lead fw-bold text-center">@data.CustomerFullName</p>
+            <div class="d-flex justify-content-around">
+              <span class="card-text">DEPARTURE <br><a
+                href="@data.FormsLink!.AerolineaOutgoingForm">@Convert.ToDateTime(data.FlyCustomerDeparture).ToShortDateString()</a>
+              </span>
+              @if (data.FlyCustomerArrivals != data.FlyCustomerDeparture)
+              {
+                <span class="card-text">ARRIVALS <br>
+                  <a
+                href="@data.FormsLink.AerolineaIncomingForm">@Convert.ToDateTime(data.FlyCustomerArrivals).ToShortDateString()</a>
+                </span>
+              }
             </div>
-            <div class="card-body text-warning fw-bold">
-              <p class="lead fw-bold text-center">@data.CustomerFullName</p>
-              <div class="d-flex justify-content-around">
-                <p class="card-text">DEPARTURE <br><a
-                  href="@data.FormsLink!.AerolineaOutgoingForm">@Convert.ToDateTime(data.FlyCustomerDeparture).ToShortDateString()</a>
-                </p>
-                @if (data.FlyCustomerArrivals != data.FlyCustomerDeparture)
-                {
-                  <p class="card-text">ARRIVALS <br>
-                    <a@Convert.ToDateTime><a
-                    href="@data.FormsLink.AerolineaIncomingForm">@Convert.ToDateTime(data.FlyCustomerArrivals).ToShortDateString()</a>
-                  </p>
-                }
-              </div>
-              <a href="#" class="btn btn-primary">FILL FORM</a>
+            @Html.AntiForgeryToken()
+            <div class="text-center mt-2">
+              <label class="form-check-label" for="@data.FlyCustomerId"> Form Filled</label>
             </div>
-            <div class="card-footer text-muted">
-              <i class="fas fa-plane"></i> @data.AerolineaFullname ::
-              <i class="fas fa-map-marker-alt"></i> @data.FlycustomerRoute
+            <div class="form-check form-switch d-flex justify-content-center">
+              <input class="form-check-input" type="checkbox" role="switch" id="@data.FlyCustomerId"
+              checked=@(data.FlycustomerFilled == true ? true : false) name="@data.FlyCustomerId" value="true"
+              onchange="isFilled(this)" data-bs-toggle='tooltip' data-bs-title="Enable to mark as full."
+              data-bs-placement="left" data-bs-custom-class="custom-tooltip">
             </div>
           </div>
+          <div class="card-footer text-muted">
+            <i class="fas fa-map-marker-alt">@data.FlycustomerRoute</i>
+            ::
+            <i class="fas fa-plane">@data.AerolineaFullname</i>
+          </div>
         </div>
-      }
-    </div>
+      </div>
+    }
   </div>
 </div>
 
 <script>
   //colors for each card render on home page bi #id
-  let headerColor = ['#5BA4CF', '#298FCA', "#026AA7", '#055ABC', '#094C72', '#0C3953', '#7BC86C', '#61BD4F', '#5AAC44', '#519839', '#49852E', '#3F6F21', '#FFAB4A', '#E99E40', '#D29034', '#BB8129', '#A0711C', '#5DD3E5', '#29CCE5', '#36405F', '#00AECC', '#6E2F1A', '#0082A0', '#006988']
+  let headerColor = [
+    '#5BA4CF', '#298FCA', "#026AA7", '#055ABC', '#094C72', '#0C3953', '#7BC86C',
+    '#61BD4F', '#5AAC44', '#519839', '#49852E', '#3F6F21', '#FFAB4A', '#E99E40',
+    '#D29034', '#BB8129', '#A0711C', '#5DD3E5', '#29CCE5', '#36405F', '#00AECC',
+    '#6E2F1A', '#0082A0', '#006988', '#ff99b4', '#e06c75', '#61afef', '#c678dd', '#e5c07b', '#98c379', '#0c5daf', '#ffaded', '#aeaeff', '#aeaeff', '#a1a2a9',
+    '#353739', '#b9817b', '#ff4c7c', '#562626', '#441e1e', '#3174a7', '#467498', '#4d759a', '#6fa8dc', '#70a2d4', '#d470a2', '#ffb9ca', '#787ef4', '#ffb884', '#806479', '#cc4668', '#ff8b94', '#ff4c7c']
   let idCard = @Html.Raw(Json.Serialize(Model.Select(h=>h.FlyCustomerId)))
     idCard.forEach(x => {
-      let carHeader = document.getElementById(`${x}`).style.backgroundColor = headerColor[Math.floor(Math.random() * headerColor.length)];
+      let carHeader = document.getElementById(`${x}`).style.backgroundColor = headerColor[Math.floor(Math.random() * headerColor.length) + 0];
     })
+
+  const isFilled = (e) => {
+    let token = document.querySelector('input[name="__RequestVerificationToken"').value
+    if (e.checked) {
+      const url = "@Url.Content("~/Home/IsFilled")" + "?id=" + e.id
+      fetch(url, {
+        method: 'POST', headers: {
+          'RequestVerificationToke': token
+        }
+      })
+        .then(result => {
+          if (result.status == 201) {
+            window.location.href = "@Url.Content("~/Home/Index")";
+          }
+        })
+    }
+  }
 </script>

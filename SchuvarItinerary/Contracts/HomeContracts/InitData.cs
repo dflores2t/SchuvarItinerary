@@ -19,7 +19,8 @@ public static class InitData
                  AerolineaFullname = rows.FlycustomerIdaerolineaNavigation.AerolineaFullname,
                  FlycustomerRoute = rows.FlycustomerRoute,
                  FormsLink = JsonConvert.DeserializeObject<AerolineaFormsLink>(rows.FlycustomerIdaerolineaNavigation.AerolineFormlinks!),
-                 FlyCustomerId = rows.FlycustomerId
+                 FlyCustomerId = rows.FlycustomerId,
+                 FlycustomerFilled = rows.FlycustomerFilled
                };
     return data;
   }

@@ -76,3 +76,15 @@ tbody tr {
 .input {
   width: 100%;
 }
+
+/* style to home page card footer */
+.card-footer.text-muted>i {
+  font-size: .9rem;
+}
+
+/* style to home page card switch filled */
+.form-switch .form-check-input {
+  width: 3.2rem;
+  height: 1.3rem;
+  cursor: pointer;
+}

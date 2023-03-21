@@ -13,4 +13,5 @@ public class ViewFlyCustomerResult
   public string? AerolineaFullname { get; set; }
   public string? FlycustomerRoute { get; set; }
   public AerolineaFormsLink? FormsLink { get; set; }
+  public Boolean? FlycustomerFilled { get; set; }
 }
