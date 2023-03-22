@@ -8,7 +8,8 @@
   <div class="col-md-3 offset-md-1">
     <div class="form-floating input-group">
       <div class="input-group-text"><i class="fas fa-mobile-alt"></i></div>
-      <input type="tel" pattern="[0-9]{4}-[0-9]{4}" oninput="phoneFormat(this.value)" class="form-control" asp-for="CustomerPhone" placeholder="phone" autofocus>
+      <input type="tel" pattern="[0-9]{4}-[0-9]{4}" oninput="phoneFormat(this.value)" class="form-control"
+        asp-for="CustomerPhone" placeholder="phone" autofocus>
       <label class="ms-4" asp-for="CustomerPhone">Phone Number</label>
     </div>
     <span asp-validation-for="CustomerPhone" class="text-danger"></span>
@@ -68,21 +69,21 @@
       data-bs-custom-class="custom-tooltip"></span>
   </div>
   <div class="col-10 d-flex justify-content-center offset-md-1 mt-3 gap-1">
-  <div class="col-md-3  mt-1">
-    <button type="submit" class="btn btn-primary btne"><i class="far fa-save" data-bs-toggle="tooltip"
-        data-bs-title="Save Information" data-bs-placement="left"
-        data-bs-custom-class="custom-tooltip">&nbsp;Save&nbsp;&nbsp;&nbsp;&nbsp;</i></button>
-  </div>
-  <div class="col-md-3  mt-1">
-    <button type="reset" class="btn btn-info btne" data-bs-toggle="tooltip" data-bs-title="Clear all information on textbox"
-      data-bs-custom-class="custom-tooltip" data-bs-placement="bottom"><i
-        class="fas fa-broom">&nbsp;Reset&nbsp;&nbsp;</i></button>
-  </div>
-  <div class="col-md-3  mt-1">
-    <a asp-action="Index" asp-controller="Home" class="btn btn-success btne" data-bs-toggle="tooltip"
-      data-bs-title="Retur to Home Page" data-bs-custom-class="custom-tooltip" data-bs-placement="right"><i
-        class="fas fa-undo">&nbsp;Back</i></a>
-  </div>
+    <div class="col-md-3  mt-1">
+      <button type="submit" class="btn btn-primary btne"><i class="far fa-save" data-bs-toggle="tooltip"
+          data-bs-title="Save Information" data-bs-placement="left"
+          data-bs-custom-class="custom-tooltip">&nbsp;Save&nbsp;&nbsp;&nbsp;&nbsp;</i></button>
+    </div>
+    <div class="col-md-3  mt-1">
+      <button type="reset" class="btn btn-info btne" data-bs-toggle="tooltip"
+        data-bs-title="Clear all information on textbox" data-bs-custom-class="custom-tooltip"
+        data-bs-placement="bottom"><i class="fas fa-broom">&nbsp;Reset&nbsp;&nbsp;</i></button>
+    </div>
+    <div class="col-md-3  mt-1">
+      <a asp-action="Index" asp-controller="Home" class="btn btn-success btne" data-bs-toggle="tooltip"
+        data-bs-title="Retur to Home Page" data-bs-custom-class="custom-tooltip" data-bs-placement="right"><i
+          class="fas fa-undo">&nbsp;Back</i></a>
+    </div>
   </div>
 </form>
 
@@ -110,44 +111,44 @@
 await Html.RenderPartialAsync("_ValidationScriptsPartial");
 }
 <script>
-      let txtCustomerPhone = document.querySelector("#CustomerPhone");
-      let txtName = document.querySelector("#CustomerFullName");
-      let departures = document.querySelector('#Flight_Departures').valueAsDate = new Date()
-      let arrivals = document.querySelector('#Flight_Arrivals')
-      arrivals.valueAsDate = new Date()
-      var token = document.querySelector('input[name="__RequestVerificationToken"').value;
-      document.querySelector('#Flight_Departures').addEventListener('change', (e) => {
-       arrivals.value= e.target.value
+  let txtCustomerPhone = document.querySelector("#CustomerPhone");
+  let txtName = document.querySelector("#CustomerFullName");
+  let departures = document.querySelector('#Flight_Departures').valueAsDate = new Date()
+  let arrivals = document.querySelector('#Flight_Arrivals')
+  arrivals.valueAsDate = new Date()
+  var token = document.querySelector('input[name="__RequestVerificationToken"').value;
+  document.querySelector('#Flight_Departures').addEventListener('change', (e) => {
+    arrivals.value = e.target.value
 
+  })
+  txtCustomerPhone.addEventListener("blur", () => {
+    if (txtCustomerPhone.value !== '') {
+      url = "@Url.Content("~/Customer/FindCustomer")" + "?phone=" + txtCustomerPhone.value;
+      fetch(url, {
+        method: "POST", headers: {
+          'RequestVerificationToken': token
+        }
       })
-      txtCustomerPhone.addEventListener("blur", () => {
-        if(txtCustomerPhone.value !== ''){
-        url = "@Url.Content("~/Customer/FindCustomer")" + "?phone=" + txtCustomerPhone.value;
-        fetch(url, {
-          method: "POST", headers: {
-            'RequestVerificationToken': token
+        .then((result) => {
+          if (result.ok) {
+            return result.json();
           }
         })
-          .then((result) => {
-            if (result.ok) {
-              return result.json();
-            }
-          })
-          .then(data => {
-            let customerName = JSON.parse(data);
-            txtName.value = customerName.length > 0 ? customerName[0].CustomerFullname : "";
-            txtName.readOnly = customerName.length > 0 ? true : false;
-          })
-      }
-      })
-
-  const phoneFormat =(e)=>{
-    let txtCustomerPhone = document.querySelector('#CustomerPhone')
-    e = e.replace(/\D/g,'');
-    if(e.length > 4){
-      e = e.slice(0,4) + '-' + e.slice(4,8)
+        .then(data => {
+          const customerName = JSON.parse(data);
+          txtName.value = customerName.length > 0 ? customerName[0].CustomerFullname : "";
+          txtName.readOnly = customerName.length > 0 ? true : false;
+        })
     }
-    txtCustomerPhone.value= e;
+  })
+
+  const phoneFormat = (e) => {
+    let txtCustomerPhone = document.querySelector('#CustomerPhone')
+    e = e.replace(/\D/g, '');
+    if (e.length > 4) {
+      e = e.slice(0, 4) + '-' + e.slice(4, 8)
+    }
+    txtCustomerPhone.value = e;
   };
 
 </script>
