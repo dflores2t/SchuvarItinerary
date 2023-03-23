@@ -13,17 +13,15 @@
   <table class="table table-responsive table-striped table-bordered table-hover mt-2 list-airline-table">
   <thead>
     <tr class="text-center">
-      @* <th>@Html.DisplayNameFor(h=> h.IdAerolinea)</th> *@
       <th>@Html.DisplayNameFor(h=> h.AerolineaName)</th>
       <th>@Html.DisplayNameFor(h=> h.AeroDescription)</th>
       <th colspan="2">Actions</th>
     </tr>
   </thead>
-  <tbody>
+  <tbody class="align-middle">
     @foreach (var data in Model)
       {
-        <tr class="list-airline-row">
-          @* <td>@data.IdAerolinea</td> *@
+        <tr class="list-row">
           <td>@data.AerolineaName</td>
           <td>@data.AeroDescription</td>
           <td class="text-center" style="width:7%">
@@ -45,8 +43,7 @@
     </tbody>
     <tfoot>
       <tr>
-        <td colspan=3>Total Registers</td>
-        <td class="text-center">@Model.Count()</td>
+        <td colspan=3 class="text-start"><i class="fas fa-database"> Total Registers: @Model.Count()</i></td>
       </tr>
     </tfoot>
   </table>

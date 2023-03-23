@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -138,9 +139,9 @@ public class SettingsController : Controller
   {
     Aerolinea? data = await dbContext.Aerolineas.FindAsync(id);
     data!.AerolineaIsdeleted = true;
+    data.AerolineaDatemodify = DateTime.Now;
     try
     {
-      dbContext.Aerolineas.Update(data);
       await dbContext.SaveChangesAsync();
     }
     catch (DbUpdateConcurrencyException ex)
