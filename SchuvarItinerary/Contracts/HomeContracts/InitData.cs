@@ -9,6 +9,7 @@ public static class InitData
   public static IQueryable<ViewFlyCustomerResult> IniData(SchuvaritineraryContext DbContext)
   {
     var data = from rows in DbContext.Flycustomers
+               where rows.FlycustomerIsdeleted == false
                select new ViewFlyCustomerResult
                {
                  FlycustomerLocalyzer = rows.FlycustomerLocalyzer,
@@ -17,10 +18,12 @@ public static class InitData
                  FlyCustomerDeparture = (DateTime)rows.FlycustomerDeparture!,
                  FlyCustomerArrivals = (DateTime)rows.FlycustomerArrivals!,
                  AerolineaFullname = rows.FlycustomerIdaerolineaNavigation.AerolineaFullname,
+                 AerolineaId = rows.FlycustomerIdaerolinea,
                  FlycustomerRoute = rows.FlycustomerRoute,
                  FormsLink = JsonConvert.DeserializeObject<AerolineaFormsLink>(rows.FlycustomerIdaerolineaNavigation.AerolineFormlinks!),
                  FlyCustomerId = rows.FlycustomerId,
-                 FlycustomerFilled = rows.FlycustomerFilled
+                 FlycustomerFilled = rows.FlycustomerFilled,
+                 FlycustomerIsDeleted = rows.FlycustomerIsdeleted
                };
     return data;
   }
