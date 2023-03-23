@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using System.Data.Common;
 using System.Data;
 using Microsoft.AspNetCore.Mvc;
@@ -43,6 +44,24 @@ public class CustomerController : Controller
     return View();
   }
 
+  public async Task<IActionResult> UpdateCustomerItinerary(int? id)
+  {
+    ViewFlyCustomerResult result = new();
+    if (id == null)
+    {
+      return NotFound();
+    }
+    try
+    {
+      result = await CustomerContracts.UpdateCustomerItinerary(dbContext, id);
+    }
+    catch (System.Exception ex)
+    {
+      ViewBag.Error = ex.Message;
+    }
+    ViewData["Aerolinea"] = CustomerContracts.AerolineaDropDownList(dbContext);
+    return View(result);
+  }
   #endregion
 
   #region PostEndPoint
@@ -79,6 +98,35 @@ public class CustomerController : Controller
     {
       throw new Exception(ex.Message);
     }
+  }
+  [HttpPost]
+  [ValidateAntiForgeryToken]
+  public async Task<IActionResult> UpdateCustomerItinerary(int id, [Bind("FlyCustomerId", "CustomerPhone", "CustomerFullName", "FlycustomerLocalyzer", "AerolineaId", "FlycustomerRoute", "FlyCustomerDeparture", "FlyCustomerArrivals")] ViewFlyCustomerResult model)
+  {
+    Boolean result = false;
+
+    if (id != model.FlyCustomerId)
+    {
+      return NotFound();
+    }
+    if (ModelState.IsValid)
+    {
+      try
+      {
+        result = await CustomerContracts.SaveChangesCustomerItinerary(dbContext, model);
+      }
+      catch (System.Exception)
+      {
+        throw;
+      }
+    }
+    return result ? RedirectToAction(nameof(MontlyItinerary)) : View(model);
+  }
+
+  public async Task<IActionResult> DeleteCustomerItinerary(int? id)
+  {
+    Boolean result = await CustomerContracts.DeleteCustomerItinerary(dbContext, id);
+    return result ? RedirectToAction(nameof(MontlyItinerary)) : View();
   }
   #endregion
 }

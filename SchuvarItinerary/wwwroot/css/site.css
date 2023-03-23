@@ -50,8 +50,8 @@ tbody tr {
   white-space: nowrap;
 }
 
-.list-airline-row i,
-.list-airline-row button {
+.list-row i,
+.list-row button {
   border-radius: 0;
   border-width: 0px;
   background-color: transparent;

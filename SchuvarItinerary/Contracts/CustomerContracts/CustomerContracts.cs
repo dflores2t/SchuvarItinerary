@@ -1,7 +1,9 @@
+using System.Data.Common;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using SchuvarItinerary.Contracts.HomeContracts;
 using SchuvarItinerary.DataBase;
 using SchuvarItinerary.Models.ViewModels;
 
@@ -26,7 +28,8 @@ public static class CustomerContracts
       try
       {
         data = data
-         .Where(d => d.FlycustomerDeparture!.Value.Year == month.Value.Year && d.FlycustomerDeparture.Value.Month == month.Value.Month)
+         .Where(d => d.FlycustomerDeparture!.Value.Year == month.Value.Year && d.FlycustomerDeparture.Value.Month == month.Value.Month && d.FlycustomerIsdeleted==false)
+         .OrderByDescending(f => f.FlycustomerDeparture)
          .Include(c => c.FlycustomerIdcustomerNavigation)
          .Include(a => a.FlycustomerIdaerolineaNavigation);
       }
@@ -55,14 +58,14 @@ public static class CustomerContracts
       throw new Exception(ex.Message);
     }
   }
-/// <summary>
-/// This method, save all data to database
-/// First check if the customer exist, if exists only keep the infomation, else, add new record into flycustomer object.
-/// </summary>
-/// <param name="DbContext"></param>
-/// <param name="model"></param>
-/// <returns></returns>
-/// <exception cref="Exception"></exception>
+  /// <summary>
+  /// This method, save all data to database
+  /// First check if the customer exist, if exists only keep the infomation, else, add new record into flycustomer object.
+  /// </summary>
+  /// <param name="DbContext"></param>
+  /// <param name="model"></param>
+  /// <returns></returns>
+  /// <exception cref="Exception"></exception>
   public static async Task<Boolean> NewCustomerItinerary(SchuvaritineraryContext DbContext, ViewCustomerFlightModel model)
   {
     Customer? customer = new()
@@ -96,12 +99,12 @@ public static class CustomerContracts
     }
     return true;
   }
-/// <summary>
-/// This method is used to fill input name customer if the phone number exists into records.
-/// </summary>
-/// <param name="DbContext"></param>
-/// <param name="phone"></param>
-/// <returns></returns>
+  /// <summary>
+  /// This method is used to fill input name customer if the phone number exists into records.
+  /// </summary>
+  /// <param name="DbContext"></param>
+  /// <param name="phone"></param>
+  /// <returns></returns>
   public static string FindCustomer(SchuvaritineraryContext DbContext, string phone)
   {
     var customer = from c in DbContext.Customers
@@ -111,5 +114,82 @@ public static class CustomerContracts
       customer = customer.Where(d => d.CustomerPhone == phone);
     }
     return JsonConvert.SerializeObject(customer);
+  }
+  /// <summary>
+  /// This method return data from id to show on update page.
+  /// </summary>
+  /// <param name="DbContext"></param>
+  /// <param name="id"></param>
+  /// <returns></returns>
+  public static async Task<ViewFlyCustomerResult> UpdateCustomerItinerary(SchuvaritineraryContext DbContext, int? id)
+  {
+    var data = InitData.IniData(DbContext);
+    data = data
+    .Where(d => d.FlyCustomerId == id);
+    return await data.FirstAsync();
+  }
+  /// <summary>
+  ///  This resume get all data from update page and send new data to edit.
+  /// </summary>
+  /// <param name="DbContext"></param>
+  /// <param name="customerItinerary"></param>
+  /// <returns></returns>
+  public static async Task<Boolean> SaveChangesCustomerItinerary(SchuvaritineraryContext DbContext, ViewFlyCustomerResult customerItinerary)
+  {
+    Boolean status = false;
+    Customer customerUpdate = new()
+    {
+      CustomerFullname = customerItinerary.CustomerFullName!.ToUpper(),
+      CustomerPhone = customerItinerary.CustomerPhone!,
+    };
+    if (DbContext.Customers.Any(c => c.CustomerPhone == customerUpdate.CustomerPhone))
+    {
+      customerUpdate = await DbContext.Customers
+      .FirstAsync(c => c.CustomerPhone == customerItinerary.CustomerPhone);
+    }
+    var updateChanges = await DbContext.Flycustomers.FindAsync(customerItinerary.FlyCustomerId);
+    updateChanges!.FlycustomerId = customerItinerary.FlyCustomerId;
+    updateChanges.FlycustomerRoute = customerItinerary.FlycustomerRoute!.ToUpper();
+    updateChanges.FlycustomerLocalyzer = customerItinerary.FlycustomerLocalyzer!.ToUpper();
+    updateChanges.FlycustomerDeparture = DateTimeOffset.Parse(customerItinerary.FlyCustomerDeparture.ToString()).UtcDateTime;
+    updateChanges.FlycustomerArrivals = DateTimeOffset.Parse(customerItinerary.FlyCustomerArrivals.ToString()).UtcDateTime;
+    updateChanges.FlycustomerIdaerolinea = customerItinerary.AerolineaId;
+    updateChanges.FlycustomerDatemodify = DateTime.Now;
+    updateChanges.FlycustomerIdcustomerNavigation = customerUpdate;
+
+    try
+    {
+      await DbContext.SaveChangesAsync();
+      status = true;
+    }
+    catch (System.Exception)
+    {
+      status = false;
+      throw;
+    }
+    return status;
+  }
+/// <summary>
+/// This method put the property isdeleted in true.
+/// </summary>
+/// <param name="DbContext"></param>
+/// <param name="id"></param>
+/// <returns></returns>
+  public static async Task<Boolean> DeleteCustomerItinerary(SchuvaritineraryContext DbContext, int? id)
+  {
+    Flycustomer? flyCustomer = await DbContext.Flycustomers.FindAsync(id);
+    flyCustomer!.FlycustomerIsdeleted = true;
+    flyCustomer.FlycustomerDatemodify = DateTime.Now;
+    bool status;
+    try
+    {
+      await DbContext.SaveChangesAsync();
+      status = true;
+    }
+    catch (System.Exception)
+    {
+      throw;
+    }
+    return status;
   }
 }
