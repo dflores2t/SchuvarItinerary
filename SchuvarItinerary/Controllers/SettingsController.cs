@@ -2,6 +2,7 @@ using System;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using SchuvarItinerary.Contracts.SettingsContracts;
 using SchuvarItinerary.DataBase;
 using SchuvarItinerary.Models.ViewModels;
 
@@ -10,53 +11,36 @@ namespace SchuvarItinerary.Controllers;
 public class SettingsController : Controller
 {
   private readonly SchuvaritineraryContext dbContext;
+  private readonly AerolineaContracts _ac;
 
   public SettingsController(SchuvaritineraryContext dbContext)
   {
     this.dbContext = dbContext;
+    _ac = new(dbContext);
   }
 
   #region GetEndPoint
   public async Task<ViewResult> Index()
   {
-    var result = new List<ViewAirLine>();
-    result = await dbContext.Aerolineas.Where(d => d.AerolineaIsdeleted == false).Select(d => new ViewAirLine(d)).ToListAsync();
-    return View(result);
+    return View(await _ac.IndexViewAirline());
   }
-  [HttpGet]
+  [HttpGet] //trigger add page
   public ViewResult AirLine() => View();
-  [HttpGet]
+  [HttpGet] //trigger edit page
   public async Task<IActionResult> UpdateAirline(int? id)
   {
-    Aerolinea? data = new();
+    // Aerolinea? data = new();
     if (id == null)
     {
       return NotFound();
     }
-    try
-    {
-      data = await dbContext.Aerolineas.FindAsync(id);
-    }
-    catch (Exception ex)
-    {
-      ViewBag.ErrorMessage = ex.Message;
-    }
-    ViewAirLine result = new()
-    {
-      IdAerolinea = data!.AerolineaId,
-      AerolineaName = data.AerolineaShortname.ToUpper(),
-      AeroDescription = data.AerolineaFullname.ToUpper(),
-      AerolineaDateup = data.AerolineaDateup,
-      AerolineaIsDeleted = data.AerolineaIsdeleted,
-      FormsLink = JsonConvert.DeserializeObject<AerolineaFormsLink>(data.AerolineFormlinks!)!
-    };
-    return View(result);
+    return View(await _ac.FindUpdateAirline(id));
   }
 
   #endregion
 
   #region PostEndPoint
-  [HttpPost]
+  [HttpPost] //add new entry.
   [ValidateAntiForgeryToken]
   public async Task<IActionResult> AirLine(ViewAirLine model)
   {
@@ -65,29 +49,8 @@ public class SettingsController : Controller
       ViewBag.ErrorMessage = "Data Invalid. Please try again!";
       return View(model);
     }
-    AerolineaFormsLink FormsLink = new()
-    {
-      AerolineaIncomingForm = model.FormsLink!.AerolineaIncomingForm,
-      AerolineaOutgoingForm = model.FormsLink!.AerolineaOutgoingForm
-    };
-    Aerolinea airLine = new()
-    {
-      AerolineaShortname = model.AerolineaName!.ToUpper(),
-      AerolineaFullname = model.AeroDescription!.ToUpper(),
-      AerolineFormlinks = JsonConvert.SerializeObject(FormsLink),
-      AerolineaIsdeleted = false
-    };
-    dbContext.Add(airLine);
-    try
-    {
-      await dbContext.SaveChangesAsync();
-      ViewBag.Success = $"{model.AerolineaName.ToUpper()} Data Save Successfuly";
-    }
-    catch (System.Exception ex)
-    {
-      ViewBag.ErrorMessage = ex.Message;
-    }
-    return RedirectToAction(nameof(Index));
+    var status = await _ac.AddNewAirlineEntry(model);
+    return status ? RedirectToAction(nameof(Index)) : View();
   }
 
   [HttpPost]
@@ -104,56 +67,38 @@ public class SettingsController : Controller
       return View(model);
     }
 
-    AerolineaFormsLink FormsLink = new()
+    if (IdAerolinea != model.IdAerolinea)
     {
-      AerolineaIncomingForm = model.FormsLink!.AerolineaIncomingForm,
-      AerolineaOutgoingForm = model.FormsLink!.AerolineaOutgoingForm
-    };
+      return NotFound();
+    }
 
-    Aerolinea aerolineaUpdate = new()
-    {
-      AerolineaId = model.IdAerolinea,
-      AerolineaShortname = model.AerolineaName!.ToUpper(),
-      AerolineaFullname = model.AeroDescription!.ToUpper(),
-      AerolineFormlinks = JsonConvert.SerializeObject(FormsLink),
-      AerolineaDateup = model.AerolineaDateup,
-      AerolineaDatemodify = DateTime.Now,
-      AerolineaIsdeleted = model.AerolineaIsDeleted
-    };
+    Boolean status = false;
     try
     {
-      dbContext.Update(aerolineaUpdate);
-      await dbContext.SaveChangesAsync();
+      status = await _ac.PostUpdateAirline(model);
       ViewBag.Success = $"{model.AerolineaName!.ToUpper()} Data Updated Succesfuly";
     }
     catch (DbUpdateException ex)
     {
       ViewBag.ErrorMessage = ex.Message;
     }
-    return RedirectToAction(nameof(Index));
+    return status ? RedirectToAction(nameof(Index)) : View(model);
   }
 
   [HttpPost]
   [ValidateAntiForgeryToken]
   public async Task<IActionResult> DeleteAirline(int? id)
   {
-    Aerolinea? data = await dbContext.Aerolineas.FindAsync(id);
-    data!.AerolineaIsdeleted = true;
-    data.AerolineaDatemodify = DateTime.Now;
+    Boolean status = false;
     try
     {
-      await dbContext.SaveChangesAsync();
+      status = await _ac.DeleteAirlineEntry(id);
     }
     catch (DbUpdateConcurrencyException ex)
     {
-      return !AerolineaExists(id) ? ViewBag.ErrorMessage = ex.Message : NotFound();
+      ViewBag.ErrorMessage = ex.Message;
     }
-    return RedirectToAction(nameof(Index));
+    return status ? RedirectToAction(nameof(Index)) : View();
   }
   #endregion
-
-  private bool AerolineaExists(int? id)
-  {
-    return dbContext.Aerolineas.Any(e => e.AerolineaId == id);
-  }
 }
