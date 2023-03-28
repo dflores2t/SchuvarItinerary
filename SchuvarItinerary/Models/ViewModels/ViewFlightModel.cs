@@ -9,7 +9,7 @@ public class ViewFlightModel
 
   public int IdCustomer { get; set; }
   [Required(ErrorMessage = "This fiel cannot be empty!")]
-
+  [Range(1, int.MaxValue, ErrorMessage = "Please select an Aeroline!")]
   public int IdAerolinea { get; set; }
 
   [Required]
